@@ -3,42 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Button Overlay</title>
-    <style>
-        #iframe-container {
-            position: relative;
-            width: 100%;
-            height: 100vh; /* Сделать высоту на весь экран или другой подходящий размер */
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        #close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            background: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-            z-index: 1000; /* Убедиться, что кнопка выше iframe */
-        }
-    </style>
+    <title>Tracking Clicks</title>
 </head>
 <body>
-    <div id="iframe-container">
-        <iframe src="https://edwmpt.com/embed/lf?c=object_container&site=jasmin&cobrandId=&psid=inskkkk&pstool=202_1&psprogram=pps&campaign_id=&category=girl&forcedPerformers[]=AliceGoldie&vp[showChat]=true&vp[chatAutoHide]=true&vp[showCallToAction]=&vp[showPerformerName]=&vp[showPerformerStatus]=&ms_notrack=1&subAffId={SUBAFFID}" id="tracked-iframe"></iframe>
-        <button id="close-button">Close</button>
-    </div>
+    <!-- Iframe container -->
+    <div id="object_container" style="width:100%;height:100%"></div>
+    <script src="https://edwmpt.com/embed/lf?c=object_container&site=jasmin&cobrandId=&psid=inskkkk&pstool=202_1&psprogram=revs&campaign_id=&category=girl&forcedPerformers[]=AliceGoldie&vp[showChat]=&vp[chatAutoHide]=&vp[showCallToAction]=true&vp[showPerformerName]=&vp[showPerformerStatus]=&ms_notrack=1&subAffId={SUBAFFID}"></script>
 
+    <!-- Tracking pixel script -->
+    <script type="text/javascript">
+        !function() {
+            var a = document.createElement("script");
+            a.type = "text/javascript";
+            a.src = "https://zebix.bemobtrk.com/go-js/0c73f30b-8752-4483-8361-1992ad4215d4?" + window.location.search.substring(1);
+            var b = document.getElementsByTagName("script")[0];
+            b.parentNode.insertBefore(a, b);
+        }();
+    </script>
+
+    <!-- Click tracking script -->
     <script>
-        // Function to handle close button click
-        document.getElementById('close-button').addEventListener('click', function() {
-            document.getElementById('iframe-container').style.display = 'none'; // Скрыть контейнер с iframe
-        });
+        // Function to track clicks
+        function trackClick(event) {
+            var clickData = {
+                x: event.clientX,
+                y: event.clientY,
+                timestamp: Date.now(),
+                url: window.location.href
+            };
+
+            fetch('https://zebix.bemobtrk.com/click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(clickData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Click tracked successfully');
+                } else {
+                    console.error('Failed to track click');
+                }
+            })
+            .catch(error => {
+                console.error('Error tracking click:', error);
+            });
+        }
+
+        // Attach click event listener to the document
+        document.addEventListener('click', trackClick);
     </script>
 </body>
 </html>
