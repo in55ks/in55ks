@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Button</title>
+    <title>Conversion Tracking</title>
 </head>
 <body>
 
-    <!-- Встраивание пикселя -->
+    <!-- Встраивание пикселя трекинга -->
     <script type="text/javascript">
+        // Сохраняем значения параметров в глобальные переменные
         let clickId = null;
+        let price = null;
 
         // Функция для получения параметра из URL
         function getParameterByName(name, url) {
@@ -22,44 +24,34 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        // Извлекаем bemobdata из URL
-        const bemobData = getParameterByName('bemobdata', window.location.href);
-        
-        if (bemobData) {
-            // Декодируем bemobdata
-            const decodedData = decodeURIComponent(bemobData);
+        // Извлекаем click_id и другие параметры из URL
+        clickId = getParameterByName('click_id');
+        price = getParameterByName('price');
 
-            // Ищем значение click_id, которое начинается с e%3D
-            const clickIdMatch = decodedData.match(/\.e%3D([^\.]+)/);
-            if (clickIdMatch && clickIdMatch[1]) {
-                clickId = clickIdMatch[1];
-                console.log('Click ID извлечен:', clickId);
-            } else {
-                console.error('Click ID не найден в bemobdata.');
-            }
-        } else {
-            console.error('Параметр bemobdata не найден.');
-        }
+        // Встраиваем скрипт пикселя трекера
+        !function(){
+            var a=document.createElement("script");
+            a.type="text/javascript";
+            a.async=!0;
+            a.src="https://zebix.bemobtrk.com/landing/0c73f30b-8752-4483-8361-1992ad4215d4?callback=REPLACE&rule=REPLACE&path=REPLACE&landing=REPLACE&"+window.location.search.substring(1);
+            var b=document.getElementsByTagName("script")[0];
+            b.parentNode.insertBefore(a,b);
+        }();
     </script>
 
-    <!-- Кнопка -->
-    <button id="clickButton">Отправить запрос</button>
+    <!-- Кнопка для отправки постбека -->
+    <button id="conversionButton">Отправить конверсию</button>
 
     <script>
-        // Добавляем обработчик события на клик
-        document.getElementById('clickButton').addEventListener('click', () => {
+        // Обработчик клика на кнопке
+        document.getElementById('conversionButton').addEventListener('click', () => {
             if (!clickId) {
                 console.error('Click ID не был извлечен. Пожалуйста, попробуйте позже.');
                 return;
             }
 
-            // Задаем значения для остальных параметров запроса
-            const payout = '50';  // Замените на нужное значение, если нужно
-            const txid = '78910'; // Замените на нужное значение, если нужно
-            const status = 'confirmed'; // Замените на нужное значение, если нужно
-
-            // Формируем URL с параметрами, включая Click ID
-            const url = `https://zebix.bemobtrk.com/conversion.txt?cid=${clickId}&payout=${payout}&txid=${txid}&status=${status}`;
+            // Формируем URL постбека
+            const url = `https://zebix.bemobtrk.com/conversion.txt?cid=${clickId}&payout=${price}&txid=12345&status=confirmed`;
 
             // Отправляем POST запрос
             fetch(url, {
@@ -70,7 +62,7 @@
             })
             .then(response => response.text())
             .then(data => {
-                console.log('Ответ от сервера:', data);
+                console.log('Конверсия отправлена:', data);
             })
             .catch(error => {
                 console.error('Ошибка:', error);
