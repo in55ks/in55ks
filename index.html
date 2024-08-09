@@ -18,7 +18,7 @@
         // Добавляем обработчик события на клик
         button.addEventListener('click', () => {
             // Задаем значения для параметров запроса
-            const cid = '123456'; // Замените на нужное значение
+              const cid = getParameterByName('click_id', pixel.src);
             const payout = '50';  // Замените на нужное значение, если нужно
             const txid = '78910'; // Замените на нужное значение, если нужно
             const status = 'confirmed'; // Замените на нужное значение, если нужно
