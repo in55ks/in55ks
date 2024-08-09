@@ -1,10 +1,3 @@
-<div id = "object_container" style="width:100%;height:100%">
-	
-</div>
-
-<script src="https://edwmpt.com/embed/lfcht?c=object_container&site=jasmin&cobrandId=&psid=inskkkk&pstool=320_1&psprogram=pps&campaign_id=&category=girl&forcedPerformers[]=AliceGoldie&vp[showChat]=&vp[chatAutoHide]=&vp[showCallToAction]=true&vp[showPerformerName]=&vp[showPerformerStatus]=&ctaLabelKey=udmn&landingTarget=signup&ms_notrack=1&subAffId={SUBAFFID}">
-	
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,20 +22,24 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        // Загружаем пиксель и сохраняем Click ID
-        !function(){
-            var a=document.createElement("script");
-            a.type="text/javascript";
-            a.async=!0;
-            a.src="https://zebix.bemobtrk.com/landing/0c73f30b-8752-4483-8361-1992ad4215d4?callback=REPLACE&rule=REPLACE&path=REPLACE&landing=REPLACE&"+window.location.search.substring(1);
-            a.onload = function() {
-                // Извлекаем Click ID после загрузки пикселя
-                clickId = getParameterByName('cid', a.src);
+        // Извлекаем bemobdata из URL
+        const bemobData = getParameterByName('bemobdata', window.location.href);
+        
+        if (bemobData) {
+            // Декодируем bemobdata
+            const decodedData = decodeURIComponent(bemobData);
+
+            // Ищем значение click_id в decodedData
+            const clickIdMatch = decodedData.match(/e%3D([^\.]+)/);
+            if (clickIdMatch && clickIdMatch[1]) {
+                clickId = clickIdMatch[1];
                 console.log('Click ID извлечен:', clickId);
-            };
-            var b=document.getElementsByTagName("script")[0];
-            b.parentNode.insertBefore(a,b);
-        }();
+            } else {
+                console.error('Click ID не найден в bemobdata.');
+            }
+        } else {
+            console.error('Параметр bemobdata не найден.');
+        }
     </script>
 
     <!-- Кнопка -->
