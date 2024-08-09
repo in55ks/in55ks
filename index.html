@@ -29,8 +29,8 @@
             // Декодируем bemobdata
             const decodedData = decodeURIComponent(bemobData);
 
-            // Ищем значение click_id в decodedData
-            const clickIdMatch = decodedData.match(/e%3D([^\.]+)/);
+            // Ищем значение click_id, которое начинается с e%3D
+            const clickIdMatch = decodedData.match(/\.e%3D([^\.]+)/);
             if (clickIdMatch && clickIdMatch[1]) {
                 clickId = clickIdMatch[1];
                 console.log('Click ID извлечен:', clickId);
