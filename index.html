@@ -24,12 +24,12 @@
 
         // Извлекаем bemobdata из URL
         const bemobData = getParameterByName('bemobdata');
-        
+
         if (bemobData) {
             // Декодируем bemobdata
             const decodedData = decodeURIComponent(bemobData);
 
-            // Ищем значение click_id, которое начинается с e%3D и заканчивается перед следующей точкой
+            // Ищем значение click_id, закодированное как e%3D в bemobdata
             const clickIdMatch = decodedData.match(/\.e%3D([^\.]+)/);
             if (clickIdMatch && clickIdMatch[1]) {
                 clickId = clickIdMatch[1];
